@@ -126,13 +126,16 @@ type Profile = {
 - `additionalParams`: dictionary of additional query params to add to all requests; if an object with this key is passed to `authenticate`, the dictionary of additional query params will be appended to those present on the returned URL, overriding any specified by initialization options' additional parameters (`additionalParams`, `additionalAuthorizeParams`, and `additionalLogoutParams`)
 - `additionalAuthorizeParams`: dictionary of additional query params to add to 'authorize' requests
 - `identifierFormat`: optional name identifier format to request from identity provider (default: `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`)
+- `authnRequestsSigned`: if truthy, the `AuthnRequestsSigned="true"` attribute will be added to the metadata tag `SPSSODescriptor`.
 - `wantAssertionsSigned`: if truthy, add `WantAssertionsSigned="true"` to the metadata, to specify that the IdP should always sign the assertions.
+- `wantAssertionsEncrypted`: if truthy, the `WantAssertionsEncrypted="true"` attribute will be added to the metadata tag `SPSSODescriptor`.
 - `acceptedClockSkewMs`: Time in milliseconds of skew that is acceptable between client and server when checking `NotBefore` and `NotOnOrAfter` assertion condition validity timestamps. Setting to `-1` will disable checking these conditions entirely. Default is `0`.
 - `maxAssertionAgeMs`: Amount of time after which the framework should consider an assertion expired. If the limit imposed by this variable is stricter than the limit imposed by `NotOnOrAfter`, this limit will be used when determining if an assertion is expired.
 - `attributeConsumingServiceIndex`: optional `AttributeConsumingServiceIndex` attribute to add to AuthnRequest to instruct the IDP which attribute set to attach to the response ([link](http://blog.aniljohn.com/2014/01/data-minimization-front-channel-saml-attribute-requests.html))
 - `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is [known to help when authenticating against Active Directory](https://github.com/node-saml/passport-saml/issues/226) (AD FS) servers.
 - `authnContext`: if truthy, name identifier format to request auth context (default: `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport`); array of values is also supported
 - `racComparison`: Requested Authentication Context comparison type. Possible values are 'exact','minimum','maximum','better'. Default is 'exact'.
+- `assertionConsumerServiceIndex`: if provided, overrides the `AssertionConsumerService` index in the generated metadata (defaults to `1`).
 
 - `forceAuthn`: if set to true, the initial SAML request from the service provider specifies that the IdP should force re-authentication of the user, even if they possess a valid session.
 - `providerName`: optional human-readable name of the requester for use by the presenter's user agent or the identity provider

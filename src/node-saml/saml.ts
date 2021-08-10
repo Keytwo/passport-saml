@@ -148,7 +148,9 @@ class SAML {
         ctorOptions.identifierFormat === undefined
           ? "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
           : ctorOptions.identifierFormat,
+      authnRequestsSigned: ctorOptions.authnRequestsSigned ?? false,
       wantAssertionsSigned: ctorOptions.wantAssertionsSigned ?? false,
+      wantAssertionsEncrypted: ctorOptions.wantAssertionsEncrypted ?? false,
       authnContext: ctorOptions.authnContext ?? [
         "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
       ],
@@ -165,6 +167,8 @@ class SAML {
       authnRequestBinding: ctorOptions.authnRequestBinding ?? "HTTP-Redirect",
 
       racComparison: ctorOptions.racComparison ?? "exact",
+
+      assertionConsumerServiceIndex: Number.isFinite(ctorOptions.assertionConsumerServiceIndex) ? ctorOptions.assertionConsumerServiceIndex : 1,
     };
 
     /**
@@ -1422,12 +1426,20 @@ class SAML {
       metadata.EntityDescriptor.SPSSODescriptor.NameIDFormat = this.options.identifierFormat;
     }
 
+    if (this.options.authnRequestsSigned) {
+      metadata.EntityDescriptor.SPSSODescriptor["@AuthnRequestsSigned"] = true;
+    }
+
     if (this.options.wantAssertionsSigned) {
       metadata.EntityDescriptor.SPSSODescriptor["@WantAssertionsSigned"] = true;
     }
 
+    if (this.options.wantAssertionsEncrypted) {
+      metadata.EntityDescriptor.SPSSODescriptor["@WantAssertionsEncrypted"] = true;
+    }
+
     metadata.EntityDescriptor.SPSSODescriptor.AssertionConsumerService = {
-      "@index": "1",
+      "@index": this.options.assertionConsumerServiceIndex,
       "@isDefault": "true",
       "@Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
       "@Location": this.getCallbackUrl(),
